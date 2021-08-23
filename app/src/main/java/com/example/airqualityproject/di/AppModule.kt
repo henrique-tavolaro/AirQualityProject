@@ -3,24 +3,28 @@ package com.example.airqualityproject.di
 import com.example.airqualityproject.datasource.RetrofitService
 import com.example.airqualityproject.domain.repositories.AirRepository
 import com.example.airqualityproject.domain.repositories.AirRepositoryImpl
+import com.example.airqualityproject.presenter.AirViewModel
 import com.example.airqualityproject.utils.API_TOKEN
 import com.example.airqualityproject.utils.BASE_URL
 import com.google.gson.GsonBuilder
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Named
-import javax.inject.Singleton
 
-@Module
-@InstallIn(SingletonComponent::class)
+//@Module
+//@InstallIn(SingletonComponent::class)
 object AppModule {
 
-    @Singleton
-    @Provides
+    val myModule = module{
+        single { provideRetrofitService() }
+        single { provideAuthToken() }
+        single { provideRepository(get()) }
+        viewModel { AirViewModel(get(), get()) }
+    }
+
+//    @Singleton
+//    @Provides
     fun provideRetrofitService(): RetrofitService {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
@@ -33,15 +37,15 @@ object AppModule {
      * I might include proper authentication later on food2fork.ca
      * For now just hard code a token.
      */
-    @Singleton
-    @Provides
-    @Named("token")
+//    @Singleton
+//    @Provides
+//    @Named("token")
     fun provideAuthToken(): String{
         return API_TOKEN
     }
 
-    @Singleton
-    @Provides
+//    @Singleton
+//    @Provides
     fun provideRepository(
         retrofitService: RetrofitService
     ) : AirRepository {

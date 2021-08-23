@@ -4,27 +4,23 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.airqualityproject.domain.repositories.AirRepository
-import com.example.airqualityproject.utils.API_TOKEN
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import javax.inject.Named
 
-@HiltViewModel
-class AirViewModel @Inject constructor(
+//@HiltViewModel
+class AirViewModel(
     private val repository: AirRepository,
-    @Named ("token") private val token: String
+    private val token: String
 ) : ViewModel() {
 
     init {
-        search("Rome")
+        search("rome")
     }
 
     fun search(city: String){
         viewModelScope.launch {
             val response = repository.search(
-                token,
-                city
+                city,
+                token
             )
             Log.d("TAG1", response.toString())
         }

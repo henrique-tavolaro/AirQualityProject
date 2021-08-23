@@ -1,16 +1,18 @@
 package com.example.airqualityproject.domain.repositories
 
+import android.util.Log
 import com.example.airqualityproject.datasource.RetrofitService
 import com.example.airqualityproject.domain.model.Response
-import com.example.airqualityproject.utils.API_TOKEN
 
 class AirRepositoryImpl(
     private val retrofitService: RetrofitService
 ) : AirRepository {
     override suspend fun search(
+        city: String,
         token: String,
-        city: String
+
     ) : Response {
+        Log.d("TAG11", city)
         return retrofitService.search(
             token,
             city
