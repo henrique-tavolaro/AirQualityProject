@@ -2,28 +2,29 @@ package com.example.airqualityproject.presenter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.example.airqualityproject.databinding.LazyAdapterBinding
+import com.example.airqualityproject.databinding.LazyCityAdapterBinding
 import com.example.airqualityproject.domain.model.Data
 
-class LazyAdapter : ListAdapter<Data, LazyAdapter.ItemViewHolder>(LazyCallback()) {
+class CityListAdapter(val clickListener: CityListListener) : ListAdapter<Data, CityListAdapter.ItemViewHolder>(LazyCallback()) {
 
-    class ItemViewHolder private constructor (val binding: LazyAdapterBinding) : RecyclerView.ViewHolder(binding.root){
+    class ItemViewHolder private constructor (val binding: LazyCityAdapterBinding) : RecyclerView.ViewHolder(binding.root){
 
         fun bind(
-            item: Data
+            item: Data,
+            clickListener: CityListListener
         ) {
-            binding.rvAdapter.text = item.station.name
+            binding.dataResponse = item
+            binding.clickListener = clickListener
             binding.executePendingBindings()
 
         }
 
         companion object {
             fun from(parent: ViewGroup): ItemViewHolder {
-                val binding = LazyAdapterBinding.inflate(
+                val binding = LazyCityAdapterBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
@@ -40,7 +41,7 @@ class LazyAdapter : ListAdapter<Data, LazyAdapter.ItemViewHolder>(LazyCallback()
 
     override fun onBindViewHolder(holder: ItemViewHolder, position: Int) {
        val item = getItem(position)
-        holder.bind(item)
+        holder.bind(item, clickListener)
     }
 
 }
@@ -53,5 +54,9 @@ class LazyCallback : DiffUtil.ItemCallback<Data>(){
     override fun areContentsTheSame(oldItem: Data, newItem: Data): Boolean {
         return oldItem == newItem
     }
-
 }
+
+class CityListListener(val clickListener: (data: Data) -> Unit){
+    fun onClick(data: Data) = clickListener(data)
+}
+

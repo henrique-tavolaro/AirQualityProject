@@ -16,16 +16,20 @@
         android:orientation="vertical">
 
         <EditText
+            android:id="@+id/et_search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:imeOptions="actionSearch"
+            android:padding="16dp"
             android:hint="Search a city or station"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_home"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            tools:listitem="@layout/lazy_adapter"
+            android:orientation="vertical"
+            tools:listitem="@layout/lazy_city_adapter"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
     </LinearLayout>

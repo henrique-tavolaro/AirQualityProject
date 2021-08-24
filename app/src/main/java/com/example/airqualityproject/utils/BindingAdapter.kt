@@ -10,3 +10,10 @@ fun TextView.setCity(item: Data?){
         text = item.station.name
     }
 }
+
+@BindingAdapter("set_country")
+fun TextView.setCountry(item: Data?){
+    item?.let {
+        text = item.station.country
+    }
+}

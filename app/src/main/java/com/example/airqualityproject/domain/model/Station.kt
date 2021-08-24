@@ -1,11 +1,13 @@
 package com.example.airqualityproject.domain.model
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
 
-import com.google.gson.annotations.SerializedName
 
+@Parcelize
 data class Station(
     val country: String,
     val geo: List<Double>,
     val name: String,
     val url: String
-)
+) : Parcelable
