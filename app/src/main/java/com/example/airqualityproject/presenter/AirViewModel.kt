@@ -1,8 +1,8 @@
 package com.example.airqualityproject.presenter
 
 import android.util.Log
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
+import com.example.airqualityproject.domain.model.Response
 import com.example.airqualityproject.domain.repositories.AirRepository
 import kotlinx.coroutines.launch
 
@@ -12,17 +12,16 @@ class AirViewModel(
     private val token: String
 ) : ViewModel() {
 
-    init {
-        search("rome")
-    }
+    private val _result: MutableLiveData<Response> = MutableLiveData()
+    val result: LiveData<Response> get() = _result
 
-    fun search(city: String){
+    fun search(city: String) {
         viewModelScope.launch {
-            val response = repository.search(
+            _result.value = repository.search(
                 city,
                 token
             )
-            Log.d("TAG1", response.toString())
+            Log.d("TAG1", result!!.value.toString())
         }
     }
 
