@@ -21,6 +21,6 @@
         tools:layout="@layout/fragment_detail" >
         <argument
             android:name="data"
-            app:argType="com.example.airqualityproject.domain.model.Data" />
+            app:argType="com.example.airqualityproject.domain.model.search.Data" />
     </fragment>
 </navigation>

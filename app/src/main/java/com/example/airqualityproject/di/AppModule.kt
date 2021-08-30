@@ -7,13 +7,13 @@ import com.example.airqualityproject.presenter.AirViewModel
 import com.example.airqualityproject.utils.API_TOKEN
 import com.example.airqualityproject.utils.BASE_URL
 import com.google.gson.GsonBuilder
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
-//@Module
-//@InstallIn(SingletonComponent::class)
 object AppModule {
 
     val myModule = module{
@@ -23,35 +23,28 @@ object AppModule {
         viewModel { AirViewModel(get(), get()) }
     }
 
-//    @Singleton
-//    @Provides
+    val logger : HttpLoggingInterceptor = HttpLoggingInterceptor()
+        .setLevel(HttpLoggingInterceptor.Level.BODY)
+
+    val okHttp = OkHttpClient.Builder().addInterceptor(logger)
+
     fun provideRetrofitService(): RetrofitService {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .client(okHttp.build())
             .build()
             .create(RetrofitService::class.java)
     }
 
-    /**
-     * I might include proper authentication later on food2fork.ca
-     * For now just hard code a token.
-     */
-//    @Singleton
-//    @Provides
-//    @Named("token")
     fun provideAuthToken(): String{
         return API_TOKEN
     }
 
-//    @Singleton
-//    @Provides
     fun provideRepository(
         retrofitService: RetrofitService
     ) : AirRepository {
         return AirRepositoryImpl(retrofitService)
     }
-
-
 
 }

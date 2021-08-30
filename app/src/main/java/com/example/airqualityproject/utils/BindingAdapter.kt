@@ -2,7 +2,7 @@ package com.example.airqualityproject.utils
 
 import android.widget.TextView
 import androidx.databinding.BindingAdapter
-import com.example.airqualityproject.domain.model.Data
+import com.example.airqualityproject.domain.model.search.Data
 
 @BindingAdapter("set_city")
 fun TextView.setCity(item: Data?){

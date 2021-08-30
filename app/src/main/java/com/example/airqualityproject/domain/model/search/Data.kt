@@ -1,4 +1,4 @@
-package com.example.airqualityproject.domain.model
+package com.example.airqualityproject.domain.model.search
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize

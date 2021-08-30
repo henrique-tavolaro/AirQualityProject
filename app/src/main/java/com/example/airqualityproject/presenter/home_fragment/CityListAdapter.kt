@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.airqualityproject.databinding.LazyCityAdapterBinding
-import com.example.airqualityproject.domain.model.Data
+import com.example.airqualityproject.domain.model.search.Data
 
 class CityListAdapter(val clickListener: CityListListener) : ListAdapter<Data, CityListAdapter.ItemViewHolder>(LazyCallback()) {
 
