@@ -8,8 +8,8 @@
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.airqualityproject.presenter.home_fragment.HomeFragment"
-        android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
+        android:label="Air Quality Project"
+        tools:layout="@layout/fragment_home">
         <action
             android:id="@+id/action_homeFragment_to_detailFragment"
             app:destination="@id/detailFragment" />
@@ -17,7 +17,7 @@
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.example.airqualityproject.presenter.detail_fragment.DetailFragment"
-        android:label="fragment_detail"
+        android:label="Station Details"
         tools:layout="@layout/fragment_detail" >
         <argument
             android:name="data"

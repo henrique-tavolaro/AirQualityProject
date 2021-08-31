@@ -10,6 +10,8 @@
             type="com.example.airqualityproject.presenter.AirViewModel" />
     </data>
 
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -30,16 +32,19 @@
             android:layout_marginVertical="16dp"
             android:orientation="horizontal">
 
+
+
             <androidx.cardview.widget.CardView
+                android:id="@+id/o3"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
+                android:elevation="4dp"
                 app:cardBackgroundColor="@color/cardview_dark_background"
-                app:cardCornerRadius="25dp">
+                app:cardCornerRadius="20dp">
 
                 <TextView
-                    android:id="@+id/o3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -50,16 +55,17 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/pm10"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
                 android:layout_weight="1"
+                android:elevation="4dp"
                 app:cardBackgroundColor="@color/cardview_dark_background"
-                app:cardCornerRadius="25dp">
+                app:cardCornerRadius="20dp">
 
 
                 <TextView
-                    android:id="@+id/pm10"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -71,34 +77,38 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/pm25"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
+                android:elevation="4dp"
                 android:layout_weight="1"
                 app:cardBackgroundColor="@color/cardview_dark_background"
-                app:cardCornerRadius="25dp">
+                app:cardCornerRadius="20dp">
 
                 <TextView
-                    android:id="@+id/pm25"
+
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:padding="10dp"
-                    android:text="PM25"
+                    android:text="@string/pm25"
                     android:textColor="@color/white" />
 
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/uvi"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:elevation="4dp"
                 android:layout_weight="1"
                 app:cardBackgroundColor="@color/cardview_dark_background"
-                app:cardCornerRadius="25dp">
+                app:cardCornerRadius="20dp">
 
                 <TextView
-                    android:id="@+id/uvi"
+
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="center"
@@ -113,7 +123,6 @@
             android:id="@+id/aa_chart_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
         </com.github.aachartmodel.aainfographics.aachartcreator.AAChartView>
 
     </LinearLayout>

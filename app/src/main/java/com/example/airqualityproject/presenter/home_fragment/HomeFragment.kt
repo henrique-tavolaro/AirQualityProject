@@ -1,6 +1,7 @@
 package com.example.airqualityproject.presenter.home_fragment
 
 import android.content.Context
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.KeyEvent
@@ -10,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import android.widget.Toolbar
+import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -18,6 +21,7 @@ import com.example.airqualityproject.databinding.FragmentHomeBinding
 import com.example.airqualityproject.presenter.AirViewModel
 import com.example.airqualityproject.presenter.CityListAdapter
 import com.example.airqualityproject.presenter.CityListListener
+import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -30,6 +34,9 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        setHasOptionsMenu(true)
+
+
         binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_home,
@@ -43,9 +50,32 @@ class HomeFragment : Fragment() {
 
         binding.rvHome.adapter = adapter
 
+        viewModel.snackbarMessage.observe(viewLifecycleOwner, Observer {
+            it.getContentIfNotHandled()?.let { message ->
+
+                Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+            }
+        })
+
+        viewModel.loading.observe(viewLifecycleOwner, Observer {
+            val progressBar = binding.progressCircular
+            if(it) {
+                progressBar.visibility = View.VISIBLE
+            } else {
+                progressBar.visibility = View.GONE
+            }
+        })
+
         viewModel.result.observe(viewLifecycleOwner, Observer {
             it?.let {
-                adapter.submitList(it.data)
+                val noResults = binding.tvNoResults
+                if(it.data.isNotEmpty()){
+                    adapter.submitList(it.data)
+                    noResults.visibility = View.GONE
+                } else {
+                    noResults.visibility = View.VISIBLE
+                }
+
             }
         })
 
@@ -59,7 +89,6 @@ class HomeFragment : Fragment() {
 
         editText.setOnKeyListener(object : View.OnKeyListener {
             override fun onKey(v: View?, keyCode: Int, event: KeyEvent): Boolean {
-                // if the event is a key down event on the enter button
                 if (event.action == KeyEvent.ACTION_DOWN &&
                     keyCode == KeyEvent.KEYCODE_ENTER
                 ) {

@@ -1,19 +1,22 @@
 package com.example.airqualityproject.presenter
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
+import android.content.Context
+import android.util.Log
+import androidx.lifecycle.*
 import com.example.airqualityproject.domain.model.details.ResponseDetails
 import com.example.airqualityproject.domain.model.search.Data
 import com.example.airqualityproject.domain.model.search.Response
 import com.example.airqualityproject.domain.repositories.AirRepository
 import com.example.airqualityproject.presenter.detail_fragment.Pollutants
+import com.example.airqualityproject.utils.Event
 import com.github.aachartmodel.aainfographics.aachartcreator.AAOptions
 import com.github.aachartmodel.aainfographics.aachartcreator.AASeriesElement
 import com.github.aachartmodel.aainfographics.aaoptionsmodel.AAChart
 import com.github.aachartmodel.aainfographics.aaoptionsmodel.AATitle
 import com.github.aachartmodel.aainfographics.aaoptionsmodel.AAXAxis
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class AirViewModel(
@@ -21,17 +24,36 @@ class AirViewModel(
     private val token: String
 ) : ViewModel() {
 
-    var selected = ""
+    val pollutantSelected : MutableLiveData<String> = MutableLiveData()
+    val selected : LiveData<String> = pollutantSelected
 
     private val _result: MutableLiveData<Response> = MutableLiveData()
     val result: LiveData<Response> = _result
 
+    private val _loading: MutableLiveData<Boolean> = MutableLiveData()
+    val loading : LiveData<Boolean> = _loading
+
+    private val _snackbarMessage = MutableLiveData<Event<String>>()
+    val snackbarMessage : LiveData<Event<String>> = _snackbarMessage
+
     fun search(city: String) {
         viewModelScope.launch {
-            _result.value = repository.search(
+            repository.search(
                 city,
                 token
-            )
+            ).onEach { dataState ->
+
+                _loading.value = dataState.loading
+
+                dataState.data?.let {
+                    _result.value = it
+                }
+
+                dataState.error?.let {
+                    _snackbarMessage.value = Event("Error fetching data")
+                }
+            }.launchIn(viewModelScope)
+
         }
     }
 
@@ -47,7 +69,18 @@ class AirViewModel(
 
     fun getDetails(city: String) {
         viewModelScope.launch {
-            _detailsResult.value = repository.getDetails(city)
+            repository.getDetails(city).onEach { dataState ->
+
+                dataState.data?.let {
+                    _detailsResult.value =  it
+                    Log.d("tag11", it.toString())
+                }
+
+                dataState.error?.let {
+                    Log.d("TAGERR", it)
+                }
+            }.launchIn(viewModelScope)
+
         }
     }
 
@@ -55,7 +88,7 @@ class AirViewModel(
         val maxArray = mutableListOf<Int>()
         val minArray = mutableListOf<Int>()
         val daysArray = mutableListOf<String>()
-        when (selected) {
+        when (selected.value) {
             Pollutants.O3.name -> {
                 for (i in result.data.forecast.daily.o3) {
                     maxArray.add(i.max)
@@ -84,11 +117,11 @@ class AirViewModel(
                 }
             }
             Pollutants.UVI.name -> {
-                for (i in result!!.data.forecast.daily.uvi) {
+                for (i in result.data.forecast.daily.uvi) {
                     maxArray.add(i.max)
                     daysArray.add(i.day)
                 }
-                for (i in result!!.data.forecast.daily.uvi) {
+                for (i in result.data.forecast.daily.uvi) {
                     minArray.add(i.min)
                 }
             }
@@ -101,7 +134,7 @@ class AirViewModel(
 
         return AAOptions()
             .chart(AAChart().backgroundColor("#ffffff"))
-            .title(AATitle().text("$selected Forecast"))
+            .title(AATitle().text(if(selected.value != null) "${selected.value} Forecast" else "Choose pollutant" ))
             .xAxis(aaXAxis)
             .series(
                 arrayOf(
