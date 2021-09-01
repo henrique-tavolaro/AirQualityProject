@@ -92,35 +92,28 @@ class DetailFragment : Fragment() {
         }
 
         viewModel.detailsResult.observe(viewLifecycleOwner, Observer {
-            val result = it
+            it.getContentIfNotHandled()?.let { result ->
+                val createChart = viewModel.createChart(result)
+                aaChartView.aa_drawChartWithChartOptions(createChart)
 
-            val createChart = viewModel.createChart(result!!)
-            aaChartView.aa_drawChartWithChartOptions(createChart)
+                val callback = OnMapReadyCallback { googleMap ->
+                    val lat = args.data.station.geo[0]
+                    val lon = args.data.station.geo[1]
+                    val location = LatLng(lat, lon)
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 14f))
+                    googleMap.addMarker(
+                        MarkerOptions()
+                            .position(location)
+                            .title(result.data.attributions[0].name)
+                            .snippet(result.data.city.name)
+                    )
+                }
 
-            val callback = OnMapReadyCallback { googleMap ->
-                val lat = args.data.station.geo[0]
-                val lon = args.data.station.geo[1]
-                val location = LatLng(lat, lon)
-                googleMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location, 14f))
-                googleMap.addMarker(
-                    MarkerOptions()
-                        .position(location)
-                        .title(result.data.attributions[0].name)
-                        .snippet(result.data.city.name)
-                )
+                val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
+                mapFragment?.getMapAsync(callback)
             }
-
-            val mapFragment = childFragmentManager.findFragmentById(R.id.map) as SupportMapFragment?
-            mapFragment?.getMapAsync(callback)
-
         })
         return binding.root
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-//        val toolbar : Toolbar = binding.myToolbar
-
     }
 }
 

@@ -1,5 +1,6 @@
 package com.example.airqualityproject.domain.repositories
 
+import android.util.Log
 import com.example.airqualityproject.datasource.RetrofitService
 import com.example.airqualityproject.domain.model.DataState
 import com.example.airqualityproject.domain.model.details.ResponseDetails
@@ -22,7 +23,6 @@ class AirRepositoryImpl(
                 token,
                 city
             )
-
             emit(DataState.success(result))
 
         } catch (e: Exception){

@@ -10,5 +10,5 @@ data class Data(
     val forecast: Forecast,
     val iaqi: Iaqi,
     val idx: Int,
-    val timeDetails: TimeDetails
+    val timeDetails: TimeDetails?
 )

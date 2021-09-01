@@ -1,9 +1,7 @@
 package com.example.airqualityproject.presenter.home_fragment
 
 import android.content.Context
-import android.opengl.Visibility
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,8 +9,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import android.widget.Toolbar
-import androidx.core.view.isVisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -21,7 +17,6 @@ import com.example.airqualityproject.databinding.FragmentHomeBinding
 import com.example.airqualityproject.presenter.AirViewModel
 import com.example.airqualityproject.presenter.CityListAdapter
 import com.example.airqualityproject.presenter.CityListListener
-import com.google.android.material.snackbar.Snackbar
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -50,9 +45,8 @@ class HomeFragment : Fragment() {
 
         binding.rvHome.adapter = adapter
 
-        viewModel.snackbarMessage.observe(viewLifecycleOwner, Observer {
+        viewModel.toastMessage.observe(viewLifecycleOwner, Observer {
             it.getContentIfNotHandled()?.let { message ->
-
                 Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
             }
         })
@@ -67,10 +61,10 @@ class HomeFragment : Fragment() {
         })
 
         viewModel.result.observe(viewLifecycleOwner, Observer {
-            it?.let {
+            it.getContentIfNotHandled()?.let { response ->
                 val noResults = binding.tvNoResults
-                if(it.data.isNotEmpty()){
-                    adapter.submitList(it.data)
+                if(response.data.isNotEmpty()){
+                    adapter.submitList(response.data)
                     noResults.visibility = View.GONE
                 } else {
                     noResults.visibility = View.VISIBLE
@@ -84,6 +78,7 @@ class HomeFragment : Fragment() {
                this.findNavController().navigate(
                     HomeFragmentDirections.actionHomeFragmentToDetailFragment(it)
                )
+               viewModel.onCityNavigated()
            }
         }, )
 
@@ -93,7 +88,7 @@ class HomeFragment : Fragment() {
                     keyCode == KeyEvent.KEYCODE_ENTER
                 ) {
                     viewModel.search(editText.text.toString())
-
+                    editText.setText("")
                     editText.hideKeyboard()
                     editText.clearFocus()
                     return true

@@ -1,6 +1,5 @@
 package com.example.airqualityproject.presenter
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.*
 import com.example.airqualityproject.domain.model.details.ResponseDetails
@@ -14,7 +13,6 @@ import com.github.aachartmodel.aainfographics.aachartcreator.AASeriesElement
 import com.github.aachartmodel.aainfographics.aaoptionsmodel.AAChart
 import com.github.aachartmodel.aainfographics.aaoptionsmodel.AATitle
 import com.github.aachartmodel.aainfographics.aaoptionsmodel.AAXAxis
-import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -27,14 +25,14 @@ class AirViewModel(
     val pollutantSelected : MutableLiveData<String> = MutableLiveData()
     val selected : LiveData<String> = pollutantSelected
 
-    private val _result: MutableLiveData<Response> = MutableLiveData()
-    val result: LiveData<Response> = _result
+    private val _result: MutableLiveData<Event<Response>> = MutableLiveData()
+    val result: LiveData<Event<Response>> = _result
 
     private val _loading: MutableLiveData<Boolean> = MutableLiveData()
     val loading : LiveData<Boolean> = _loading
 
-    private val _snackbarMessage = MutableLiveData<Event<String>>()
-    val snackbarMessage : LiveData<Event<String>> = _snackbarMessage
+    private val _toastMessage = MutableLiveData<Event<String>>()
+    val toastMessage : LiveData<Event<String>> = _toastMessage
 
     fun search(city: String) {
         viewModelScope.launch {
@@ -46,11 +44,11 @@ class AirViewModel(
                 _loading.value = dataState.loading
 
                 dataState.data?.let {
-                    _result.value = it
+                    _result.postValue(Event(it))
                 }
 
                 dataState.error?.let {
-                    _snackbarMessage.value = Event("Error fetching data")
+                    _toastMessage.value = Event("Error fetching data")
                 }
             }.launchIn(viewModelScope)
 
@@ -64,20 +62,23 @@ class AirViewModel(
         _navigateToAirQualityDetails.value = data
     }
 
-    private val _detailsResult: MutableLiveData<ResponseDetails> = MutableLiveData()
-    val detailsResult: LiveData<ResponseDetails> = _detailsResult
+    fun onCityNavigated() {
+        _navigateToAirQualityDetails.value = null
+    }
+
+    private val _detailsResult: MutableLiveData<Event<ResponseDetails>> = MutableLiveData()
+    val detailsResult: LiveData<Event<ResponseDetails>> = _detailsResult
 
     fun getDetails(city: String) {
         viewModelScope.launch {
             repository.getDetails(city).onEach { dataState ->
 
                 dataState.data?.let {
-                    _detailsResult.value =  it
-                    Log.d("tag11", it.toString())
+                    _detailsResult.postValue(Event(it))
                 }
 
                 dataState.error?.let {
-                    Log.d("TAGERR", it)
+                    _toastMessage.value = Event("Error fetching data")
                 }
             }.launchIn(viewModelScope)
 
