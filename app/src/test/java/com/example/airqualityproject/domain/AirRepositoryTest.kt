@@ -1,4 +1,4 @@
-package com.example.airqualityproject.datasource.domain
+package com.example.airqualityproject.domain
 
 import com.example.airqualityproject.datasource.MockWebServerResponse.detailsResponse
 import com.example.airqualityproject.datasource.MockWebServerResponse.searchResponse
@@ -11,7 +11,6 @@ import com.google.gson.GsonBuilder
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runBlockingTest
 import okhttp3.HttpUrl
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer

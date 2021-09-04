@@ -29,6 +29,7 @@ class AirRepositoryImpl(
             emit(DataState.error<Response>(e.message ?: "Unknown error"))
         }
 
+
     }
 
     override suspend fun getDetails(

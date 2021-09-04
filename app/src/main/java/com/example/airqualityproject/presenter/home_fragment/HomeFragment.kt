@@ -78,6 +78,7 @@ class HomeFragment : Fragment() {
                this.findNavController().navigate(
                     HomeFragmentDirections.actionHomeFragmentToDetailFragment(it)
                )
+               editText.setText("")
                viewModel.onCityNavigated()
            }
         }, )
@@ -88,7 +89,7 @@ class HomeFragment : Fragment() {
                     keyCode == KeyEvent.KEYCODE_ENTER
                 ) {
                     viewModel.search(editText.text.toString())
-                    editText.setText("")
+
                     editText.hideKeyboard()
                     editText.clearFocus()
                     return true
